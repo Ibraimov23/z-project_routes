@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - nax</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+</head>
+<body>
+    <h2>Опции:</h2>
+    <form method="POST" action="{{ url_for('dashboard.dashboard') }}">
+        <div class="discuss-form">
+            <button type="submit" name="action" value="Get Grades" class="geteducation">Узнать оценки</button>
+            <button type="submit" name="action" value="Get Homework" class="gethomework">Узнать домашки</button>
+            <div class="getpair">
+                <label for="date">Выберите дату:</label>
+                <input type="date" id="date" name="date">
+                <button type="submit" name="action" value="Get Timetable">Узнать пары</button>
+            </div>
+        </div>
+    </form>
+    
+    {% if waiting_for_server %}
+        <p>Waiting for the server response...</p>
+    {% endif %}
+
+    {% if grades %}
+        <h3>{{title}}</h3>
+        <ul>
+            {% if grades is string %}
+                <li>{{ grades }}</li>  
+            {% else %}
+                {% for subject, grades_list in grades.items() %}
+                    <li><strong>{{ subject }}:</strong>
+                        <ul>
+                            {% for grade in grades_list %}
+                                <li>
+                                    <p>{{ grade.title }}
+                                    {% if grade.max_points != 100 %}
+                                        {{ grade.grade_n }}/{{ grade.max_points }}</p>
+                                    {% else %}
+                                        <p>{{ grade.percent }}%</p>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <p>=================================================================</p>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    {% else %}
+    {% endif %}
+
+    {% if homework %}
+        <h3>{{title}}</h3>
+        <ul>
+            {% for subject, homework_list in homework.items() %}
+                <li><strong>{{ subject }}:</strong>
+                    <ul>
+                        {% for hw in homework_list %}
+                            <li>
+                                <strong>{{ hw.title }}</strong><br>
+                                <p>Due Date: {{ hw.due_date if hw.due_date else "No due date" }}</p>
+                                <p>Description: {{ hw.description if hw.description else "No description" }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <p>=================================================================</p>
+            {% endfor %}
+        </ul>
+    {% else %}
+    {% endif %}
+    
+    {% if timetable %}
+    <h3>{{title}}</h3>
+    <ul>
+        {% if timetable is string %}
+            <li>{{ timetable }}</li>
+        {% else %}
+            {% for subject, lessons_list in timetable.items() %}
+                <li>
+                    <strong>{{subject}}</strong>
+                    <ul>
+                        {% for lesson in lessons_list %}
+                            <li>
+                                <p>Period: {{ lesson.period }} - Teacher: {{ lesson.teacher_name }}</p>
+                                <p>=================================================================</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+{% else %}
+{% endif %}
+
+</body>
+</html>

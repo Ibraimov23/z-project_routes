@@ -1,0 +1,21 @@
+
+.geteducation {
+    margin-right: 15px;
+}
+
+.gethomework {
+    margin-left: 15px;
+}
+.getpair {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    width: 20%;
+    padding-top: 30px;
+}
+.gappa-div {
+    padding: 10px 0px;
+}
+button {
+    cursor: pointer;
+}
